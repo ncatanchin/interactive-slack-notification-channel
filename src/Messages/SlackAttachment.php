@@ -91,7 +91,7 @@ class SlackAttachment
         return $this;
     }
 
-    public function field(Closure | string $title, string $content = ''): self
+    public function field($title, string $content = ''): self
     {
         if (is_callable($title)) {
             $callback = $title;
