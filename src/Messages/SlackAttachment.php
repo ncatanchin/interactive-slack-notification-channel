@@ -199,7 +199,7 @@ class SlackAttachment
         return $this;
     }
 
-    public function timestamp(\DateTimeInterface | \DateInterval | int $timestamp): self
+    public function timestamp($timestamp): self
     {
         $this->timestamp = $this->availableAt($timestamp);
 
