@@ -16,7 +16,7 @@ class InteractiveSlackChannel
 
     protected ?string $channel = null;
 
-    public function send(mixed $notifiable, Notification $notification)
+    public function send($notifiable, Notification $notification)
     {
         if (! $config = $notifiable->routeNotificationFor('interactiveSlack', $notification)) {
             return null;
