@@ -40,7 +40,7 @@ class InteractiveSlackChannel
 
         $this->channel = $config['channel'] ?? null;
 
-        $response = $this->http->post(self::API_ENDPOINT, $this->buildJsonPayload($notification->toInteractiveSlack($notifiable));
+        $response = $this->http->post(self::API_ENDPOINT, $this->buildJsonPayload($notification->toInteractiveSlack($notifiable)));
 
         $response = $response->getBody()->getContents();
 
