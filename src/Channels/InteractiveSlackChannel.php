@@ -2,8 +2,9 @@
 
 namespace Spatie\InteractiveSlackNotificationChannel\Channels;
 
+use GuzzleHttp\Client as HttpClient;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Http;
+# use Illuminate\Support\Facades\Http;
 use Spatie\InteractiveSlackNotificationChannel\Messages\SlackAttachment;
 use Spatie\InteractiveSlackNotificationChannel\Messages\SlackAttachmentField;
 use Spatie\InteractiveSlackNotificationChannel\Messages\SlackMessage;
@@ -16,6 +17,19 @@ class InteractiveSlackChannel
 
     protected ?string $channel = null;
 
+   /**
+     * Create a new Slack channel instance.
+     *
+     * @param  \GuzzleHttp\Client  $http
+     * @return void
+     */
+    public function __construct(HttpClient $http)
+    {
+        $this->http = $http;
+
+        $this->token = null;
+    }
+
     public function send($notifiable, Notification $notification)
     {
         if (! $config = $notifiable->routeNotificationFor('interactiveSlack', $notification)) {
@@ -26,12 +40,14 @@ class InteractiveSlackChannel
 
         $this->channel = $config['channel'] ?? null;
 
-        $payload = $this->buildJsonPayload($notification->toInteractiveSlack($notifiable));
+        $response = $this->http->post(self::API_ENDPOINT, $this->buildJsonPayload($notification->toInteractiveSlack($notifiable));
 
-        $response = Http::withHeaders($payload['headers'])->post(self::API_ENDPOINT, $payload['json']);
+        $response = $response->getBody()->getContents();
 
+        $toArray = json_decode($response, true);                                      
+                                      
         if (method_exists($notification, 'interactiveSlackResponse')) {
-            return $notification->interactiveSlackResponse($response->json() ?? []);
+            return $notification->interactiveSlackResponse($toArray ?? []);
         }
 
         return $response;
